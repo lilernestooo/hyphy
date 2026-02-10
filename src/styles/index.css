@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-zinc-950 text-white font-sans overflow-x-hidden;
+    margin: 0;
+  }
+}
+
+@layer components {
+  /* Animated Mesh Gradient for the background */
+  .bg-hyphy-main {
+    background: radial-gradient(circle at 50% -20%, #7f1d1d 0%, #18181b 80%),
+                radial-gradient(circle at 0% 100%, #450a0a 0%, #09090b 50%);
+  }
+
+  /* Text Gradient Utility */
+  .text-gradient-red {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-red-600 via-red-500 to-orange-500;
+  }
+}
+
+/* Custom grain texture overlay for extra "vibe" */
+.bg-grain {
+  background-image: url("https://www.transparenttextures.com/patterns/carbon-fibre.png");
+  opacity: 0.05;
+}
+
+/* Pulse animation for background glow */
+@keyframes pulse-slow {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.1); }
+}
+.animate-pulse-slow {
+  animation: pulse-slow 8s infinite ease-in-out;
+}
