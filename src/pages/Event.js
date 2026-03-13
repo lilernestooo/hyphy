@@ -1,9 +1,16 @@
-import React, { useState } from 'react';
-import { upcomingEvents } from '../utils/Data';
+import React, { useState, useEffect } from 'react';
+import api from '../utils/api';
 import GraffitiImg from '../assets/images/grafity.jpg'; 
 
 const Events = () => {
-  const [filter, setFilter] = useState('All');
+ const [filter, setFilter] = useState('All');
+ const [upcomingEvents, setUpcomingEvents] = useState([]);
+
+useEffect(() => {
+  api.get('/events')
+    .then(res => setUpcomingEvents(res.data))
+    .catch(err => console.error(err));
+}, []);
 
   const categories = ['All', ...new Set(upcomingEvents.map(event => event.type))];
 
@@ -103,7 +110,15 @@ const Events = () => {
               className="group relative overflow-hidden rounded-[2.5rem] bg-zinc-950/40 border border-white/5 backdrop-blur-xl transition-all duration-500 hover:border-red-600/50"
             >
               <div className="h-72 bg-zinc-900/80 relative overflow-hidden border-b border-white/5">
-                <div className={`absolute inset-0 bg-gradient-to-t ${event.color || 'from-red-600 to-black'} opacity-40 group-hover:opacity-20 transition-opacity duration-500`}></div>
+                {/* Show image if available */}
+                {event.image && (
+                  <img 
+                    src={`http://127.0.0.1:8000/storage/${event.image}`}
+                    alt={event.title}
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                )}
+                <div className={`absolute inset-0 bg-gradient-to-t ${event.color || 'from-red-600 to-black'} ${event.image ? 'opacity-20' : 'opacity-40'} group-hover:opacity-10 transition-opacity duration-500`}></div>
                 
                 <div className="absolute top-6 left-6 px-4 py-1 bg-black/60 backdrop-blur-md border border-white/10 rounded-full z-20">
                   <span className="text-white font-black italic text-[9px] tracking-widest uppercase">{event.type}</span>

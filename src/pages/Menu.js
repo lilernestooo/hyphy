@@ -1,12 +1,22 @@
-import React, { useState } from 'react';
-import { menuItems } from '../utils/Data';
+import React, { useState, useEffect } from 'react';
+import api from '../utils/api';
 import MenuCard from '../components/ordering/MenuCard';
 import Cart from '../components/ordering/Cart';
-import GraffitiImg from '../assets/images/grafity.jpg'; 
+import GraffitiImg from '../assets/images/grafity.jpg';
 
 const Menu = () => {
-  const [cart, setCart] = useState([]);
-  const [activeCategory, setActiveCategory] = useState('All');
+const [cart, setCart] = useState([]);
+const clearCart = () => setCart([]); // ← add this line
+const [activeCategory, setActiveCategory] = useState('All');
+const [menuItems, setMenuItems] = useState([]);
+const [loadingItems, setLoadingItems] = useState(true);
+
+useEffect(() => {
+  api.get('/menu-items')
+    .then(res => setMenuItems(res.data))
+    .catch(err => console.error(err))
+    .finally(() => setLoadingItems(false));
+}, []);
 
   const addToCart = (item) => {
     setCart([...cart, item]);
@@ -130,6 +140,7 @@ const Menu = () => {
         <Cart 
           items={cart} 
           onRemove={removeFromCart} 
+          onClear={clearCart}
           total={totalPrice} 
         />
       </div>
